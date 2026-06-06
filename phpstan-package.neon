@@ -1,0 +1,11 @@
+parameters:
+    ignoreErrors:
+        -
+            identifier: argument.type
+            message: '~expects resource, resource\|false given~'
+        -
+            identifier: catch.neverThrown
+        -
+            identifier: offsetAccess.notFound
+        -
+            identifier: nullCoalesce.offset

@@ -1,0 +1,92 @@
+{
+    "name": "switon/http",
+    "description": "Controller-based HTTP boundary with request input, response shaping, lifecycle hooks, and runtime adapters for Switon Framework",
+    "type": "library",
+    "keywords": [
+        "switon",
+        "http",
+        "server",
+        "requests",
+        "responses"
+    ],
+    "homepage": "https://github.com/switon-php/http",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "switon",
+            "email": "admin@switon.dev"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/switon-php/http",
+        "issues": "https://github.com/switon-php/http/issues",
+        "docs": "https://docs.switon.dev/latest/http"
+    },
+    "require": {
+        "ext-dom": "*",
+        "php": ">=8.3",
+        "psr/event-dispatcher": "^1.0",
+        "switon/binding": "^1.0",
+        "switon/command": "^1.0",
+        "switon/composer-extra": "^1.0",
+        "switon/core": "^1.0",
+        "switon/event": "^1.0",
+        "switon/id": "^1.0",
+        "switon/invocation": "^1.0",
+        "switon/invoker": "^1.0",
+        "switon/kernel": "^1.0",
+        "switon/principal": "^1.0",
+        "switon/renderer": "^1.0",
+        "switon/router": "^1.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.0",
+        "switon/i18n": "^1.0",
+        "switon/testing": "^1.0",
+        "switon/validation": "^1.0",
+        "phpstan/extension-installer": "^1.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "switon/composer-extra": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Switon\\Http\\": "src/"
+        },
+        "files": [
+            "helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Switon\\Http\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "phpstan": "@php vendor/bin/phpstan analyse",
+        "test:unit": "@php vendor/bin/phpunit --configuration tests/phpunit.xml.dist --testsuite=unit --display-deprecations --display-phpunit-notices",
+        "test": "@php vendor/bin/phpunit --configuration tests/phpunit.xml.dist --testsuite=all --display-deprecations --display-phpunit-notices"
+    },
+    "extra": {
+        "switon": {
+            "providers": [
+                "Switon\\Http\\ServiceProvider"
+            ],
+            "commands": [
+                "Switon\\Http\\Command\\FilterCommand"
+            ],
+            "listeners": [
+                "Switon\\Http\\RequestInterface",
+                "Switon\\Http\\CookiesInterface",
+                "Switon\\Http\\Server\\Listener\\RenameProcessTitleListener",
+                "Switon\\Http\\Server\\Listener\\LogServerStatusListener"
+            ]
+        },
+        "branch-alias": {
+            "dev-dev": "1.0.x-dev"
+        }
+    }
+}

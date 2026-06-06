@@ -1,0 +1,171 @@
+<?php
+/**
+ * @var Exception $exception
+ */
+?>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exception: {{get_class($exception)}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .exception-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .exception-type {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .exception-message {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            word-break: break-word;
+        }
+
+        .exception-location {
+            font-size: 14px;
+            opacity: 0.9;
+            font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        }
+
+        .exception-body {
+            background: white;
+            padding: 0;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stack-trace-header {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .stack-trace {
+            padding: 0;
+        }
+
+        .trace-item {
+            border-bottom: 1px solid #e9ecef;
+            padding: 15px 25px;
+            transition: background-color 0.2s;
+        }
+
+        .trace-item:hover {
+            background: #f8f9fa;
+        }
+
+        .trace-item:last-child {
+            border-bottom: none;
+        }
+
+        .trace-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 600;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+
+        .trace-function {
+            font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+            font-size: 14px;
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .trace-location {
+            font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+            font-size: 13px;
+            color: #6c757d;
+            padding-left: 55px;
+        }
+
+        .trace-file {
+            color: #667eea;
+        }
+
+        .trace-line {
+            color: #e83e8c;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="exception-header">
+        <div class="exception-type">{{get_class($exception)}}</div>
+        <div class="exception-message">{{$exception->getMessage()}}</div>
+        <div class="exception-location">
+            {{$exception->getFile()}}:<span style="color: #fce94f; font-weight: bold;">{{$exception->getLine()}}</span>
+        </div>
+    </div>
+
+    <div class="exception-body">
+        <div class="stack-trace-header">Call Stack</div>
+        <div class="stack-trace">
+            @foreach(array_reverse($exception->getTrace()) as $index=>$trace)
+                <div class="trace-item">
+                    <span class="trace-number">{{$index}}</span>
+                    <div style="display: inline-block; vertical-align: middle; width: calc(100% - 60px);">
+                        <div class="trace-function">
+                            @if(isset($trace['class']))
+                                {{$trace['class']}}{{$trace['type']}}{{$trace['function']}}()
+                            @else
+                                {{$trace['function']}}()
+                            @endif
+                        </div>
+                        @if(isset($trace['file']))
+                            <div class="trace-location">
+                                <span class="trace-file">{{$trace['file']}}</span>:<span
+                                        class="trace-line">{{$trace['line']}}</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+</body>
+</html>

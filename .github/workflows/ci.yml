@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # No Swoole: Swoole-only tests must be skipped or not load ext; core HTTP unit tests pass.
+  phpunit-without-swoole:
+    name: PHPUnit (no Swoole)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Confirm Swoole is not loaded
+        run: |
+          php -r 'exit(extension_loaded("swoole") ? 1 : 0);'
+
+      - name: Install package dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Validate composer metadata
+        run: composer validate --no-check-lock --no-plugins
+
+      - name: Run PHPStan
+        run: composer run phpstan
+
+      - name: Run fast package tests
+        run: composer run test:unit
+
+  phpunit-with-swoole:
+    name: PHPUnit (ext-swoole)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: swoole
+          coverage: none
+
+      - name: Confirm Swoole is loaded
+        run: |
+          php -r 'exit(extension_loaded("swoole") ? 0 : 1);'
+
+      - name: Install package dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Validate composer metadata
+        run: composer validate --no-check-lock --no-plugins
+
+      - name: Run PHPStan
+        run: composer run phpstan
+
+      - name: Run fast package tests
+        run: composer run test:unit
